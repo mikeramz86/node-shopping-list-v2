@@ -18,6 +18,7 @@ ShoppingList.create('beans', 2);
 ShoppingList.create('tomatoes', 3);
 ShoppingList.create('peppers', 4);
 
+
 // adding some recipes to `Recipes` so there's something
 // to retrieve.
 Recipes.create(
@@ -46,6 +47,20 @@ app.post('/shopping-list', jsonParser, (req, res) => {
   const item = ShoppingList.create(req.body.name, req.body.budget);
   res.status(201).json(item);
 });
+
+app.post('/recipes', jsonParser, (req, res) => {
+  const requiredFields = ['name', 'ingredients'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+
+  const item = Recipes.create(req.body.name, req.body.ingredients);
+  res.status(201).json(item);
+})
 
 
 app.get('/recipes', (req, res) => {
